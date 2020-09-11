@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 
-from log import Log
+from backend.log import Log
 
 LOGGER = Log("atados-challenge").get_logger(logger_name="app")
 
