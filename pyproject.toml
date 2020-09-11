@@ -12,5 +12,7 @@ exclude = '''
   | buck-out
   | build
   | dist
+  | blib2to3
+  | tests/data
 )/
 '''
