@@ -10,6 +10,9 @@ pre-commit = "*"
 flake8 = "*"
 black = "==20.8b1"
 flask = "*"
+flask-sqlalchemy = "*"
+flask-marshmallow = "*"
+marshmallow-sqlalchemy = "*"
 
 [requires]
 python_version = "3.8"
