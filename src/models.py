@@ -8,12 +8,12 @@ from log import Log
 log = Log("evolux-project").get_logger(logger_name="models")
 
 
-class Employee(UserMixin, db.Model):
+class User(UserMixin, db.Model):
     """
-    Create an Employee table
+    Create an User table
     """
 
-    __tablename__ = "employees"
+    __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(60), index=True)
@@ -41,73 +41,99 @@ class Employee(UserMixin, db.Model):
         self.is_admin = is_admin
 
     def __repr__(self):
-        return f"<Employee: {self.username}>"
+        return f"<User: {self.username}>"
 
 
-class EmployeeSchema(ma.SQLAlchemyAutoSchema):
+class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         # Fields to expose
         fields = ("id", "first_name", "last_name", "email", "username", "is_admin")
-        model = Employee
+        model = User
         load_instance = True
 
 
-employee_schema = EmployeeSchema()
-employees_schema = EmployeeSchema(many=True)
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 
 
 # Set up user_loader
 @login_manager.user_loader
 def load_user(user_id):
     log.info("Set up an user loader")
-    return Employee.query.get(int(user_id))
+    return User.query.get(int(user_id))
 
 
-class DidNumber(db.Model):
+class Volunteer(db.Model):
     """
-    Create a DID Number table
+    Create a volunteer table
     """
 
-    __tablename__ = "didnumbers"
+    __tablename__ = "volunteers"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    value = db.Column(db.String(17), unique=True)
-    monthly_price = db.Column(db.Float)
-    setup_price = db.Column(db.Float)
-    currency = db.Column(db.String(3))
+    first_name = db.Column(db.String(60), index=True)
+    last_name = db.Column(db.String(60), index=True)
+    district = db.Column(db.String(60), index=True)
+    city = db.Column(db.String(60), index=True)
 
-    def get_url(self):
-        return url_for("user.list_didnumbers", id=self.id, _external=True)
-
-    def serialize(self):
-        data = {
-            "id": self.id,
-            "value": self.value,
-            "monthly_price": self.monthly_price,
-            "setup_price": self.setup_price,
-            "currency": self.currency,
-        }
-
-        return data
-
-    def __init__(self, value, monthly_price, setup_price, currency):
-        log.info("Create a DID number instance")
-        self.value = value
-        self.monthly_price = monthly_price
-        self.setup_price = setup_price
-        self.currency = currency
+    def __init__(self, first_name, last_name, district, city):
+        log.info("Create a volunteer instance")
+        self.first_name = first_name
+        self.last_name = last_name
+        self.district = district
+        self.city = city
 
     def __repr__(self):
-        return f"<DIDNumber: {self.value}>"
+        return f"<Volunteer: {self.first_name} {self.last_name}>"
 
 
-class DidNumberSchema(ma.Schema):
+class VolunteerSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ("id", "value", "monthly_price", "setup_price", "currency")
-        model = DidNumber
+        fields = ("id", "first_name", "last_name", "district", "city")
+        model = Volunteer
         load_instance = True
 
 
-did_number_schema = DidNumberSchema()
-did_numbers_schema = DidNumberSchema(many=True)
+volunteer_schema = VolunteerSchema()
+volunteers_schema = VolunteerSchema(many=True)
+
+
+class Action(db.Model):
+    """
+    Create an action table
+    """
+
+    __tablename__ = "actions"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    action_name = db.Column(db.String(60), index=True)
+    organizing_institution = db.Column(db.String(60), index=True)
+    address = db.Column(db.String(60), index=True)
+    district = db.Column(db.String(60), index=True)
+    city = db.Column(db.String(60), index=True)
+    description = db.Column(db.String(350), index=True)
+
+    def __init__(self, action_name, organizing_institution, address, district, city, description):
+        log.info("Create an action instance")
+        self.action_name = action_name
+        self.organizing_institution = organizing_institution
+        self.address = address
+        self.district = district
+        self.city = city
+        self.description = description
+
+    def __repr__(self):
+        return f"<Action: {self.action_name} from {self.organizing_institution}>"
+
+
+class ActionSchema(ma.Schema):
+    class Meta:
+        # Fields to expose
+        fields = ("id", "action_name", "organizing_institution", "address", "district", "city", "description")
+        model = Action
+        load_instance = True
+
+
+action_schema = ActionSchema()
+actions_schema = ActionSchema(many=True)

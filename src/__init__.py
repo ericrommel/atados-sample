@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from flask_marshmallow import Marshmallow
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 from log import Log
@@ -34,6 +35,10 @@ def create_app(test_config=None):
 
     LOGGER.info("Initialize the application for the use with its setup DB")
     db.init_app(app)
+
+    migrate = Migrate(app, db)
+
+    from src import models
 
     @app.route("/")
     def hello():
