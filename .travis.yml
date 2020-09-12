@@ -9,5 +9,5 @@ matrix:
           before_script:
             - python --version
           script:
-            - black --check backend/
+            - black --check . src/
             - flake8
