@@ -47,9 +47,17 @@ def create_app(test_config=None):
 
     from src import models
 
-    from .auth import auth as auth_blueprint
+    from src.auth import auth as auth_blueprint
 
     app.register_blueprint(auth_blueprint)
+
+    from src.volunteer import volunteer as volunteer_blueprint
+
+    app.register_blueprint(volunteer_blueprint)
+
+    from src.action import action as action_blueprint
+
+    app.register_blueprint(action_blueprint)
 
     @app.route("/")
     def hello():

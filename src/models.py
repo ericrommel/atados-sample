@@ -1,11 +1,10 @@
-from flask import url_for
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app import db, login_manager, ma
+from src import db, login_manager, ma
 from log import Log
 
-log = Log("evolux-project").get_logger(logger_name="models")
+LOGGER = Log("atados-challenge").get_logger(logger_name="app")
 
 
 class User(UserMixin, db.Model):
@@ -28,11 +27,11 @@ class User(UserMixin, db.Model):
         Check if hashed password matches with actual password
         """
 
-        log.info("Check if the password is correct")
+        LOGGER.info("Check if the password is correct")
         return check_password_hash(self.password_hash, password)
 
     def __init__(self, first_name, last_name, email, username, password, is_admin=False):
-        log.info("Create an employee instance")
+        LOGGER.info("Create an employee instance")
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -59,7 +58,7 @@ users_schema = UserSchema(many=True)
 # Set up user_loader
 @login_manager.user_loader
 def load_user(user_id):
-    log.info("Set up an user loader")
+    LOGGER.info("Set up an volunteer loader")
     return User.query.get(int(user_id))
 
 
@@ -71,15 +70,17 @@ class Volunteer(db.Model):
     __tablename__ = "volunteers"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    email = db.Column(db.String(60), index=True, unique=True)
     first_name = db.Column(db.String(60), index=True)
     last_name = db.Column(db.String(60), index=True)
     district = db.Column(db.String(60), index=True)
     city = db.Column(db.String(60), index=True)
 
-    def __init__(self, first_name, last_name, district, city):
-        log.info("Create a volunteer instance")
+    def __init__(self, first_name, last_name, email, district, city):
+        LOGGER.info("Create a volunteer instance")
         self.first_name = first_name
         self.last_name = last_name
+        self.email = email
         self.district = district
         self.city = city
 
@@ -90,7 +91,7 @@ class Volunteer(db.Model):
 class VolunteerSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ("id", "first_name", "last_name", "district", "city")
+        fields = ("id", "first_name", "last_name", "email", "district", "city")
         model = Volunteer
         load_instance = True
 
@@ -107,6 +108,7 @@ class Action(db.Model):
     __tablename__ = "actions"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    reference_id = db.Column(db.String(10), index=True, unique=True)
     action_name = db.Column(db.String(60), index=True)
     organizing_institution = db.Column(db.String(60), index=True)
     address = db.Column(db.String(60), index=True)
@@ -114,8 +116,9 @@ class Action(db.Model):
     city = db.Column(db.String(60), index=True)
     description = db.Column(db.String(350), index=True)
 
-    def __init__(self, action_name, organizing_institution, address, district, city, description):
-        log.info("Create an action instance")
+    def __init__(self, reference_id, action_name, organizing_institution, address, district, city, description):
+        LOGGER.info("Create an action instance")
+        self.reference_id = reference_id
         self.action_name = action_name
         self.organizing_institution = organizing_institution
         self.address = address
@@ -130,7 +133,16 @@ class Action(db.Model):
 class ActionSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ("id", "action_name", "organizing_institution", "address", "district", "city", "description")
+        fields = (
+            "id",
+            "reference_id",
+            "action_name",
+            "organizing_institution",
+            "address",
+            "district",
+            "city",
+            "description",
+        )
         model = Action
         load_instance = True
 

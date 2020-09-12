@@ -12,10 +12,10 @@ LOGGER = Log("atados-challenge").get_logger(logger_name="auth-views")
 @auth.route("/signup", methods=["GET", "POST"])
 def signup():
     """
-    Handle requests to the /register route. Here an user will be added to the database
+    Handle requests to the /register route. Here an volunteer will be added to the database
     """
 
-    LOGGER.info("Set user variables from request")
+    LOGGER.info("Set volunteer variables from request")
     email, username, first_name, last_name, password, is_admin = "", "", "", "", "", ""
     try:
         email = request.json["email"]
@@ -51,7 +51,7 @@ def signup():
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     """
-    Handle requests to the /login route. Log an user
+    Handle requests to the /login route. Log an volunteer
     """
 
     if request.method == "POST":
@@ -64,14 +64,14 @@ def login():
             LOGGER.error(f"KeyError: {e}")
             abort(400, f"There is no key with that value: {e}")
 
-        # Check if the user exists in the database and if the password entered matches the password in the database
+        # Check if the volunteer exists in the database and if the password entered matches the password in the database
         LOGGER.info(f"Check DB for {email}")
         user = User.query.filter_by(email=email).first()
         result = ""
         if user is not None and user.check_password(password):
             LOGGER.info(f"{user.username} found. Logging in")
             result = user_schema.dump(user)
-            # log user in
+            # log volunteer in
             login_user(user)
         else:
             abort(401, "Invalid email or password.")
@@ -85,7 +85,7 @@ def login():
 @login_required
 def logout():
     """
-    Handle requests to the /logout route. Log an user out
+    Handle requests to the /logout route. Log an volunteer out
     """
 
     logout_user()
