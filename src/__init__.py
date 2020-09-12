@@ -2,15 +2,14 @@ import os
 
 from flask import Flask
 
-from backend.log import Log
+from log import Log
 
 LOGGER = Log("atados-challenge").get_logger(logger_name="app")
 
 
 def create_app(test_config=None):
     LOGGER.info("Initialize Flask app")
-    app = Flask(__name__)
-
+    app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY="TEMPORARY",
     )
@@ -31,3 +30,5 @@ def create_app(test_config=None):
     @app.route("/")
     def hello():
         return "Hello, World!"
+
+    return app
