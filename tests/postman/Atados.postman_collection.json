@@ -1,0 +1,1723 @@
+{
+	"info": {
+		"_postman_id": "c05e34cf-e81a-4fb9-8bf9-6a6f7a85c36d",
+		"name": "Atados",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign up",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3fe94170-06c2-4d84-b5b6-116ea07cbe1d",
+						"exec": [
+							"pm.test(\"Response code is 201\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is Created\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'CREATED');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3a140e09-aa08-446f-8981-79455323aabe",
+						"exec": [
+							"// Email generator\r",
+							"randomail = Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);\r",
+							"\r",
+							"pm.environment.set('username', randomail)\r",
+							"\r",
+							"randomail += \"@email.com\"\r",
+							"pm.environment.set(\"userEmail\", randomail);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{userEmail}}\",\r\n    \"username\": \"{{username}}\",\r\n    \"first_name\": \"First Name\",\r\n    \"last_name\": \"Last Name\",\r\n    \"password\": \"123456\",\r\n    \"is_admin\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/signup",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log in (invalid user)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b8077a01-47c2-4e14-8c87-d2b0450eb10e",
+						"exec": [
+							"pm.test(\"Response code is 401\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is UNAUTHORIZED\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'UNAUTHORIZED');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be '401 Unauthorized: Invalid email or password.'\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.be.eq(\"401 Unauthorized: Invalid email or password.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"invalid-user@email.com\",\r\n    \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/login",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log in (invalid password)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "29789b90-1783-4c90-9fcd-b4dcd57ab831",
+						"exec": [
+							"pm.test(\"Response code is 401\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is UNAUTHORIZED\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'UNAUTHORIZED');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be '401 Unauthorized: Invalid email or password.'\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.be.eq(\"401 Unauthorized: Invalid email or password.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{userEmail}}\",\r\n    \"password\": \"0123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/login",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f75882-8d52-4c7d-97a3-79685993bac6",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{userEmail}}\",\r\n    \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/login",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add a Volunteer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "49e69958-c6a0-4271-8418-b172465d917d",
+						"exec": [
+							"pm.test(\"Response code is 201\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is CREATED\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'CREATED');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2366aa8c-8b5f-44ed-a7ce-8fef8af278d1",
+						"exec": [
+							"// Email generator\r",
+							"randomail = Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);\r",
+							"\r",
+							"randomail += \"@email.com\"\r",
+							"pm.environment.set(\"volunteerEmail\", randomail);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"first_name\": \"First Name\",\r\n  \"last_name\": \"Last Name\",\r\n  \"email\": \"{{volunteerEmail}}\",\r\n  \"district\": \"District IX\",\r\n  \"city\": \"Budapest\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/add",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add a Volunteer (same email)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "481581b6-1af7-4743-8c8a-269fb6e3fc99",
+						"exec": [
+							"pm.test(\"Response code is 403\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is FORBIDDEN\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'FORBIDDEN');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be '403 Forbidden: Volunteer email 75v2nnr0t9fg@email.com already exists in the database.'\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.be.eq(\"403 Forbidden: Volunteer email 75v2nnr0t9fg@email.com already exists in the database.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"first_name\": \"First Name\",\r\n  \"last_name\": \"Last Name\",\r\n  \"email\": \"{{volunteerEmail}}\",\r\n  \"district\": \"District IX\",\r\n  \"city\": \"Budapest\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/add",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log out",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "53e80725-1744-4de4-ad0c-e95d1b39d75f",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be 'You have successfully been logged out.'\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.be.eq(\"You have successfully been logged out.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/logout",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Volunteers (not logged in)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9486388b-bb39-4407-a113-d6890d10f2e6",
+						"exec": [
+							"pm.test(\"Response code is 401\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is UNAUTHORIZED\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'UNAUTHORIZED');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be '401 Unauthorized: It looks like you are not logged in yet.'\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.be.eq(\"401 Unauthorized: It looks like you are not logged in yet.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "22bb3f34-8837-4a11-b403-037961904984",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{userEmail}}\",\r\n    \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/login",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Volunteers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b4b85a4e-cc46-418d-ad33-22dcc749401b",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"var data = pm.response.json()\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(data).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"for (var i of data) {\r",
+							"    pm.environment.set('volunteerId', i.id);\r",
+							"    break\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Detail a volunteer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4a9e440c-28e0-4cb7-abed-6195644e8dac",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"didNumberValue\", pm.response.json().value)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/{{volunteerId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"{{volunteerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a volunteer (no admin)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9bbdba14-5df0-4f40-acc1-89f328685de0",
+						"exec": [
+							"pm.test(\"Response code is 403\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is FORBIDDEN\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'FORBIDDEN');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be '403 Forbidden: The current user is not an admin'\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.be.eq(\"403 Forbidden: The current user is not an admin\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "71887ef1-def6-423a-9865-30503d43b943",
+						"exec": [
+							"function generate_a_request_value() {\r",
+							"    var min_integer_part = 0\r",
+							"    var max_integer_part = 50\r",
+							"    var random_integer_part = (Math.floor(Math.random() * (max_integer_part - min_integer_part)) + min_integer_part).toString()\r",
+							"    \r",
+							"    var min_decimal_part = 0\r",
+							"    var max_decimal_part = 100\r",
+							"    var random_decimal_part = (Math.floor(Math.random() * (max_decimal_part - min_decimal_part)) + min_decimal_part).toString()\r",
+							"    \r",
+							"    return random_integer_part + \".\" + random_decimal_part\r",
+							"}\r",
+							"\r",
+							"pm.environment.set('didNumberMonthlyPrice', generate_a_request_value())\r",
+							"\r",
+							"pm.environment.set('didNumberSetupPrice', generate_a_request_value())"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"first_name\": \"New First Name\",\r\n  \"last_name\": \"New Last Name\",\r\n  \"email\": \"{{volunteerEmail}}\",\r\n  \"district\": \"District X\",\r\n  \"city\": \"Vienna\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/edit/{{volunteerId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"edit",
+						"{{volunteerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a volunteer (no admin)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b6451ab-8e82-4a7d-8824-b367d1be0d08",
+						"exec": [
+							"pm.test(\"Response code is 403\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is FORBIDDEN\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'FORBIDDEN');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be '403 Forbidden: The current user is not an admin'\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.be.eq(\"403 Forbidden: The current user is not an admin\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/delete/{{volunteerId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"delete",
+						"{{volunteerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign up (an admin)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b171f62f-08ec-4efa-a8bb-25066780af1f",
+						"exec": [
+							"pm.test(\"Response code is 201\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is Created\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'CREATED');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d7c83e94-6e52-4482-aca1-fa2e9910aca5",
+						"exec": [
+							"// Email generator\r",
+							"randomail = Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);\r",
+							"\r",
+							"pm.environment.set('adminUsername', randomail)\r",
+							"\r",
+							"randomail += \"@email.com\"\r",
+							"pm.environment.set(\"userAdminEmail\", randomail);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{userAdminEmail}}\",\r\n    \"username\": \"{{adminUsername}}\",\r\n    \"first_name\": \"First Name\",\r\n    \"last_name\": \"Last Name\",\r\n    \"password\": \"123456\",\r\n    \"is_admin\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/signup",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log in (an admin)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "52d982cf-dcc6-4837-8fbf-b5eaa7bdf652",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{userAdminEmail}}\",\r\n    \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/login",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Volunteers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e1b09326-3f82-4134-a9db-74d0dac9610b",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"var data = pm.response.json()\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(data).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"len = data.length\r",
+							"count = 1\r",
+							"for (var i of data) {\r",
+							"    if (count === len) {\r",
+							"        pm.environment.set('volunteerId', i.id);\r",
+							"        pm.environment.set('volunteerEmail', i.email)\r",
+							"        break\r",
+							"    }\r",
+							"    count++;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a volunteer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fcf4b520-08fb-470b-bc1f-e557a2dd150c",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5a650be4-a21b-4c4b-b7d0-351fe60c2487",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"first_name\": \"New First Name\",\r\n  \"last_name\": \"New Last Name\",\r\n  \"email\": \"{{volunteerEmail}}\",\r\n  \"district\": \"District X\",\r\n  \"city\": \"Vienna\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/edit/{{volunteerId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"edit",
+						"{{volunteerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a volunteer (with a new volunteer email)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7dcde634-e96f-4a75-b6d8-4b2d093c6e3c",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "03e4f8cb-36cd-43e5-905a-5b0619651c93",
+						"exec": [
+							"// Email generator\r",
+							"randomail = Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);\r",
+							"\r",
+							"randomail += \"@email.com\"\r",
+							"pm.environment.set(\"volunteerEmail\", randomail);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"first_name\": \"New First Name\",\r\n  \"last_name\": \"New Last Name\",\r\n  \"email\": \"{{volunteerEmail}}\",\r\n  \"district\": \"District X\",\r\n  \"city\": \"Vienna\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/edit/{{volunteerId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"edit",
+						"{{volunteerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a volunteer (that no exist in database)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "910d0850-533f-4508-8893-e716df9dced8",
+						"exec": [
+							"pm.test(\"Response code is 404\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is NOT FOUND\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'NOT FOUND');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.be.eq(\"404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"first_name\": \"New First Name\",\r\n  \"last_name\": \"New Last Name\",\r\n  \"email\": \"{{volunteerEmail}}\",\r\n  \"district\": \"District X\",\r\n  \"city\": \"Vienna\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/edit/100000",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"edit",
+						"100000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List volunteers (get a different volunteer email)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7502ef6a-f10c-4106-8d2c-6140c28f320c",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"var data = pm.response.json()\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(data).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"for (var i of data) {\r",
+							"    if (i.id !== pm.environment.get(\"volunteerId\")) {\r",
+							"        pm.environment.set('volunteerEmail', i.email);\r",
+							"        break\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a volunteer (using an email that already exists)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a9bb6219-f16c-4743-9551-a80149ffceda",
+						"exec": [
+							"pm.test(\"Response code is 500\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is INTERNAL SERVER ERROR\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'INTERNAL SERVER ERROR');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be '500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.'\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.be.eq(\"500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"first_name\": \"New First Name\",\r\n  \"last_name\": \"New Last Name\",\r\n  \"email\": \"{{volunteerEmail}}\",\r\n  \"district\": \"District X\",\r\n  \"city\": \"Vienna\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/edit/{{volunteerId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"edit",
+						"{{volunteerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List volunteers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1a91074a-85db-458c-97e1-4605504d135b",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"var data = pm.response.json()\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(data).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"len = data.length\r",
+							"\r",
+							"for (var i of data) {\r",
+							"    pm.environment.set('volunteerId', i.id);\r",
+							"    break\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a volunteer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e8f6040-0867-4e45-8ade-295d085436d4",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be 'The volunteer has successfully been deleted.'\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.be.eq(\"The volunteer has successfully been deleted.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/delete/{{volunteerId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"delete",
+						"{{volunteerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a volunteer (that no exist in database)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0fe3d526-7da9-4f17-acde-f290d61e2be5",
+						"exec": [
+							"pm.test(\"Response code is 404\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is NOT FOUND\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'NOT FOUND');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.'\", function () {\r",
+							"    pm.expect(pm.response.json().error).to.be.eq(\"404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/delete/{{volunteerId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"delete",
+						"{{volunteerId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add an action",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "90187c4d-6855-436c-9fa1-6187dddd77fd",
+						"exec": [
+							"pm.test(\"Response code is 201\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is CREATED\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'CREATED');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "849c3e43-c67d-40f8-9ea2-af50125013b8",
+						"exec": [
+							"// Reference ID generator\r",
+							"randoReference = Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);\r",
+							"\r",
+							"pm.environment.set(\"referenceId\", randoReference);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"action_name\": \"Action Name\",\r\n    \"reference_id\": \"{{referenceId}}\",\r\n    \"organizing_institution\": \"Institution\",\r\n    \"address\": \"This is an address, 88\",\r\n    \"district\": \"District IX\",\r\n    \"city\": \"Budapest\",\r\n    \"description\": \"This is a description about the action\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/actions/add",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"actions",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add an action (same reference id)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d7e4ada1-7b10-4744-a4df-779ede0d1aa5",
+						"exec": [
+							"pm.test(\"Response code is 403\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is FORBIDDEN\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'FORBIDDEN');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a2568b3e-a34c-4a9d-a0d5-4f70a6e20073",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"action_name\": \"Action Name\",\r\n    \"reference_id\": \"{{referenceId}}\",\r\n    \"organizing_institution\": \"Institution\",\r\n    \"address\": \"This is an address, 88\",\r\n    \"district\": \"District IX\",\r\n    \"city\": \"Budapest\",\r\n    \"description\": \"This is a description about the action\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/actions/add",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"actions",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List actions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6399235b-468e-4f41-8354-609acf7b8ab2",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"for (var i of pm.response.json()) {\r",
+							"    pm.environment.set('actionId', i.id);\r",
+							"    break\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/actions",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"actions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Detail an action",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ce13dda4-af49-4c9c-a44d-83ff72d93537",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/actions/{{actionId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"actions",
+						"{{actionId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit an action",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "de84942d-f029-4f72-9517-f15bc756fe42",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1fab186d-0e08-40f0-9ab5-f60a5f882aa7",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"action_name\": \"New Action Name\",\r\n    \"reference_id\": \"{{referenceId}}\",\r\n    \"organizing_institution\": \"New Institution\",\r\n    \"address\": \"This is a new address, 88\",\r\n    \"district\": \"District X\",\r\n    \"city\": \"Vienna\",\r\n    \"description\": \"This is a new description about the action\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/actions/edit/{{actionId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"actions",
+						"edit",
+						"{{actionId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an action",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ec17b252-27b7-458b-ab22-a348c1e6b810",
+						"exec": [
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be 'The action has successfully been deleted.'\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.be.eq(\"The action has successfully been deleted.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/actions/delete/{{actionId}}",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"actions",
+						"delete",
+						"{{actionId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
