@@ -31,7 +31,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __init__(self, first_name, last_name, email, username, password, is_admin=False):
-        LOGGER.info("Create an employee instance")
+        LOGGER.info("Create an user instance")
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -58,7 +58,7 @@ users_schema = UserSchema(many=True)
 # Set up user_loader
 @login_manager.user_loader
 def load_user(user_id):
-    LOGGER.info("Set up an volunteer loader")
+    LOGGER.info("Set up an user loader")
     return User.query.get(int(user_id))
 
 

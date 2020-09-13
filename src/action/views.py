@@ -26,8 +26,8 @@ def list_actions():
     List all actions
     """
 
+    LOGGER.info("Get the list of actions from the database")
     try:
-        LOGGER.info("Get the list of actions from the database")
         all_actions = actions_schema.dump(Action.query.order_by(Action.id.asc()))
     except OperationalError:
         LOGGER.info("There is no actions in the database")
@@ -59,8 +59,9 @@ def add_action():
 
     check_admin()
 
-    LOGGER.info("Set variables from request")
     reference_id, action_name, organizing_institution, address, district, city, description = "", "", "", "", "", "", ""
+
+    LOGGER.info("Set variables from request")
     try:
         action_name = request.json["action_name"]
         reference_id = request.json["reference_id"]
@@ -82,9 +83,9 @@ def add_action():
         description=description,
     )
 
+    LOGGER.info(f"Add action {action.action_name} to the database")
     try:
         # Add action to the database
-        LOGGER.info(f"Add action {action.action_name} to the database")
         db.session.add(action)
         db.session.commit()
     except SQLAlchemyError as e:
@@ -118,9 +119,9 @@ def edit_action(id):
     except KeyError as e:
         abort(400, f"There is no key with that value: {e}")
 
+    LOGGER.info(f"Edit action {action.action_name} in the database")
     try:
         # Edit action in the database
-        LOGGER.info(f"Edit action {action.action_name} in the database")
         db.session.commit()
     except SQLAlchemyError as e:
         db.session.rollback()
@@ -141,8 +142,9 @@ def delete_action(id):
     check_admin()
 
     action = Action.query.get_or_404(id)
+
+    LOGGER.info(f"Delete {action} from the database")
     try:
-        LOGGER.info(f"Delete {action} from the database")
         db.session.delete(action)
         db.session.commit()
     except SQLAlchemyError as e:

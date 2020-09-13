@@ -19,7 +19,7 @@ def create_app(test_config=None):
     LOGGER.info("Initialize Flask app")
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY="TEMPORARY", SQLALCHEMY_DATABASE_URI="sqlite:///./test.db", SQLALCHEMY_TRACK_MODIFICATIONS=False
+        SECRET_KEY="TEMPORARY", SQLALCHEMY_DATABASE_URI="sqlite:///./atados.db", SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
 
     if test_config is None:
@@ -29,8 +29,8 @@ def create_app(test_config=None):
         LOGGER.info(f"test-config is not None ({test_config}). Add configs from mapping")
         app.config.from_mapping(test_config)
 
+    LOGGER.info("Create 'instance' folder")
     try:
-        LOGGER.info("Create 'instance' folder")
         os.makedirs(app.instance_path)
     except OSError:
         pass
@@ -58,9 +58,5 @@ def create_app(test_config=None):
     from src.action import action as action_blueprint
 
     app.register_blueprint(action_blueprint)
-
-    @app.route("/")
-    def hello():
-        return "Hello, World!"
 
     return app

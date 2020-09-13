@@ -6,17 +6,18 @@ from . import auth
 from .. import db
 from ..models import User, user_schema
 
-LOGGER = Log("atados-challenge").get_logger(logger_name="auth-views")
+LOGGER = Log("atados-challenge").get_logger(logger_name="app")
 
 
 @auth.route("/signup", methods=["GET", "POST"])
 def signup():
     """
-    Handle requests to the /register route. Here an volunteer will be added to the database
+    Handle requests to the /register route. Here an user will be added to the database
     """
 
-    LOGGER.info("Set volunteer variables from request")
     email, username, first_name, last_name, password, is_admin = "", "", "", "", "", ""
+
+    LOGGER.info("Set user variables from request")
     try:
         email = request.json["email"]
         username = request.json["username"]
@@ -51,12 +52,12 @@ def signup():
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     """
-    Handle requests to the /login route. Log an volunteer
+    Handle requests to the /login route. Log an user
     """
 
     if request.method == "POST":
-        LOGGER.info("Set email and password from request")
         email, password = "", ""
+        LOGGER.info("Set email and password from request")
         try:
             email = request.json["email"]
             password = request.json["password"]
@@ -64,7 +65,7 @@ def login():
             LOGGER.error(f"KeyError: {e}")
             abort(400, f"There is no key with that value: {e}")
 
-        # Check if the volunteer exists in the database and if the password entered matches the password in the database
+        # Check if the user exists in the database and if the password entered matches the password in the database
         LOGGER.info(f"Check DB for {email}")
         user = User.query.filter_by(email=email).first()
         result = ""
@@ -85,7 +86,7 @@ def login():
 @login_required
 def logout():
     """
-    Handle requests to the /logout route. Log an volunteer out
+    Handle requests to the /logout route. Log an user out
     """
 
     logout_user()

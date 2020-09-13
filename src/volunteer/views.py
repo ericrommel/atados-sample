@@ -26,8 +26,8 @@ def list_volunteers():
     List all volunteers
     """
 
+    LOGGER.info("Get the list of volunteers from the database")
     try:
-        LOGGER.info("Get the list of volunteers from the database")
         all_volunteers = volunteers_schema.dump(Volunteer.query.order_by(Volunteer.id.asc()))
     except OperationalError:
         LOGGER.info("There is no volunteers in the database")
@@ -57,8 +57,9 @@ def add_volunteer():
     Add a volunteer to the database
     """
 
-    LOGGER.info("Set variables from request")
     first_name, last_name, email, district, city = "", "", "", "", ""
+
+    LOGGER.info("Set variables from request")
     try:
         first_name = request.json["first_name"]
         last_name = request.json["last_name"]
@@ -76,9 +77,9 @@ def add_volunteer():
         city=city,
     )
 
+    LOGGER.info(f"Add volunteer {volunteer.first_name} to the database")
     try:
         # Add volunteer to the database
-        LOGGER.info(f"Add volunteer {volunteer.first_name} to the database")
         db.session.add(volunteer)
         db.session.commit()
     except SQLAlchemyError as e:
@@ -110,9 +111,8 @@ def edit_volunteer(id):
     except KeyError as e:
         abort(400, f"There is no key with that value: {e}")
 
+    LOGGER.info(f"Edit volunteer {volunteer.first_name} in the database")
     try:
-        # Edit volunteer in the database
-        LOGGER.info(f"Edit volunteer {volunteer.first_name} in the database")
         db.session.commit()
     except SQLAlchemyError as e:
         db.session.rollback()
@@ -133,8 +133,8 @@ def delete_volunteer(id):
     check_admin()
 
     volunteer = Volunteer.query.get_or_404(id)
+    LOGGER.info(f"Delete {volunteer} from the database")
     try:
-        LOGGER.info(f"Delete {volunteer} from the database")
         db.session.delete(volunteer)
         db.session.commit()
     except SQLAlchemyError as e:
