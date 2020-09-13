@@ -15,6 +15,7 @@ def check_admin():
     Prevent non-admins from accessing the page
     """
 
+    LOGGER.info(f"Current user: {current_user}")
     if not current_user.is_admin:
         abort(403, "The current volunteer is not an admin")
 

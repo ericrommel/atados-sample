@@ -1,11 +1,11 @@
-from flask import abort, jsonify, request, url_for
+from flask import abort, jsonify, request
 from flask_login import current_user, login_required
 from sqlalchemy.exc import OperationalError, SQLAlchemyError
 
 from log import Log
 from . import volunteer
 from .. import db
-from ..models import Volunteer, volunteer_schema, volunteers_schema
+from ..models import User, Volunteer, volunteer_schema, volunteers_schema
 
 LOGGER = Log("atados-challenge").get_logger(logger_name="app")
 
@@ -14,13 +14,14 @@ def check_admin():
     """
     Prevent non-admins from accessing the page
     """
-
+    LOGGER.debug(f"Current User: {current_user}")
     if not current_user.is_admin:
-        abort(403, "The current volunteer is not an admin")
+        abort(403, "The current user is not an admin")
 
 
 # Volunteer views
 @volunteer.route("/volunteers")
+@login_required
 def list_volunteers():
     """
     List all volunteers
@@ -41,6 +42,7 @@ def list_volunteers():
 
 
 @volunteer.route("/volunteers/<int:id>", methods=["GET"])
+@login_required
 def volunteer_detail(id):
     """
     List details for a volunteer
@@ -51,7 +53,6 @@ def volunteer_detail(id):
 
 
 @volunteer.route("/volunteers/add", methods=["GET", "POST"])
-@login_required
 def add_volunteer():
     """
     Add a volunteer to the database
@@ -59,7 +60,7 @@ def add_volunteer():
 
     first_name, last_name, email, district, city = "", "", "", "", ""
 
-    LOGGER.info("Set variables from request")
+    LOGGER.info("Set volunteer variables from request")
     try:
         first_name = request.json["first_name"]
         last_name = request.json["last_name"]

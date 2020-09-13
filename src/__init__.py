@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_login import LoginManager
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
@@ -58,5 +58,37 @@ def create_app(test_config=None):
     from src.action import action as action_blueprint
 
     app.register_blueprint(action_blueprint)
+
+    # Errors
+    @app.errorhandler(400)
+    def bad_request(e):
+        LOGGER.error(e)
+        return jsonify(error=str(e)), 400
+
+    # Errors
+    @app.errorhandler(401)
+    def unauthorized(e):
+        LOGGER.error(e)
+        return jsonify(error=str(e)), 401
+
+    @app.errorhandler(403)
+    def forbidden(e):
+        LOGGER.error(e)
+        return jsonify(error=str(e)), 403
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        LOGGER.error(e)
+        return jsonify(error=str(e)), 404
+
+    @app.errorhandler(405)
+    def not_logged(e):
+        LOGGER.error(e)
+        return jsonify(error=str(e)), 405
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        LOGGER.error(e)
+        return jsonify(error=str(e)), 500
 
     return app
