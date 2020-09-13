@@ -1,9 +1,31 @@
 Atados Sample Project
 ======
 
-A sample project app built in Flask/SQLAlchemy.
+A simple API built in Flask/SQLAlchemy.
 
-Install
+[![Build Status](https://travis-ci.com/ericrommel/atados-sample.svg?branch=master)](https://travis-ci.com/ericrommel/atados-sample)
+[![codecov](https://codecov.io/gh/ericrommel/atados-sample/branch/master/graph/badge.svg)](https://codecov.io/gh/ericrommel/atados-sample)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+
+
+Requirements
+======
+
+- [Python 3](http://python.org/)
+- [Pip](https://pip.pypa.io/)
+- [Flask](https://flask.palletsprojects.com/)
+- [SQLite](http://sqlite.org/) (or any other supported database)
+
+These are optional but recommended.
+
+- [Black](http://black.readthedocs.io/)
+- [Codecov](http://codecov.io/)
+- [Flake8](http://flake8.pycqa.org/)
+- [Pipenv](http://pipenv.readthedocs.io)
+- [Pre-commit](http://pre-commit.com/)
+
+
+Installing
 -------
 
 The default Git version is the master branch. ::
