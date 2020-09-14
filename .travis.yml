@@ -15,4 +15,4 @@ matrix:
             - coverage erase
             - coverage run -m pytest && coverage html
           after_success:
-            - codecov
+            - bash <(curl -s https://codecov.io/bash)
