@@ -109,24 +109,6 @@ def test_add_volunteer_that_already_exists_view(app, auth, client):
     assert response.status_code == 403
 
 
-#
-# def test_add_invalid_volunteer_view(app, auth, client):
-#     """
-#     Test add an invalid volunteer
-#     """
-#
-#     target_url = get_url(app=app, url="volunteer.add_volunteer")
-#     auth.login(dict(email="non-admin@admin.com", password="123456"))
-#     a_dict = dict(
-#         value=123456,
-#         monthlyPrice="0.06",
-#         setupPrice="3.49",
-#         currency="U$",
-#     )
-#     response = auth.generic_post(target_url, a_dict)
-#     assert response.status_code == 500
-
-
 def test_edit_volunteers_without_login_view(app, auth, client):
     """
     Test edit volunteers without login (a redirection should be done)

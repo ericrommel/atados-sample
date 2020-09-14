@@ -2,12 +2,9 @@ from flask import abort, jsonify, request
 from flask_login import current_user, login_required
 from sqlalchemy.exc import OperationalError, SQLAlchemyError
 
-from log import Log
 from . import volunteer
-from .. import db
-from ..models import User, Volunteer, volunteer_schema, volunteers_schema
-
-LOGGER = Log("atados-challenge").get_logger(logger_name="app")
+from .. import db, LOGGER
+from ..models import Volunteer, volunteer_schema, volunteers_schema
 
 
 def check_admin():

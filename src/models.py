@@ -1,10 +1,8 @@
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from src import db, login_manager, ma
 from log import Log
-
-LOGGER = Log("atados-challenge").get_logger(logger_name="app")
+from src import db, LOGGER, login_manager, ma
 
 
 class User(UserMixin, db.Model):

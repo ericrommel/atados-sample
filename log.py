@@ -1,6 +1,6 @@
 import datetime
-import sys
 import logging
+import sys
 from logging.handlers import TimedRotatingFileHandler
 
 is_color_log_presented = True

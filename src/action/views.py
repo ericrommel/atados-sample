@@ -1,13 +1,10 @@
-from flask import abort, jsonify, request, url_for
+from flask import abort, jsonify, request
 from flask_login import current_user, login_required
 from sqlalchemy.exc import OperationalError, SQLAlchemyError
 
-from log import Log
 from . import action
-from .. import db
+from .. import db, LOGGER
 from ..models import Action, action_schema, actions_schema
-
-LOGGER = Log("atados-challenge").get_logger(logger_name="app")
 
 
 def check_admin():

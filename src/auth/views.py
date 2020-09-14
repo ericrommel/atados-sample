@@ -1,12 +1,9 @@
 from flask import abort, jsonify, request
 from flask_login import login_required, login_user, logout_user
 
-from log import Log
 from . import auth
-from .. import db
+from .. import db, LOGGER
 from ..models import User, user_schema
-
-LOGGER = Log("atados-challenge").get_logger(logger_name="app")
 
 
 @auth.route("/signup", methods=["GET", "POST"])
