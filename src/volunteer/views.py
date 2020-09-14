@@ -21,7 +21,6 @@ def check_admin():
 
 # Volunteer views
 @volunteer.route("/volunteers")
-@login_required
 def list_volunteers():
     """
     List all volunteers
@@ -42,7 +41,6 @@ def list_volunteers():
 
 
 @volunteer.route("/volunteers/<int:id>", methods=["GET"])
-@login_required
 def volunteer_detail(id):
     """
     List details for a volunteer

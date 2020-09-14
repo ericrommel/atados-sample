@@ -11,3 +11,8 @@ matrix:
           script:
             - black --check . src/
             - flake8
+            - pytest
+              - coverage erase
+              - coverage run --source="." pytest && coverage html
+          after_success:
+              - codecov
