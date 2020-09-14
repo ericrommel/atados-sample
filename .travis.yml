@@ -13,6 +13,6 @@ matrix:
             - flake8
             - pytest
             - coverage erase
-            - coverage run --source="." pytest && coverage html
+            - coverage run -m pytest && coverage html
           after_success:
             - codecov
