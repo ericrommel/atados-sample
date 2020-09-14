@@ -31,17 +31,29 @@ Installing
 The default Git version is the master branch. ::
 
     # clone the repository
+    ```shell
+    $ cd desired/path/
     $ git clone git@github.com:ericrommel/
+    ```
 
+The next step is install the project's Python dependencies. Just like _Git_ if you still don't have it go to the [official site](http://python.org/) and get it done. You'll also need [Pip](https://pip.pypa.io/), same rules applies here. Another interesting tool that is not required but strongly recommended is [Pipenv](http://pipenv.readthedocs.io), it helps to manage dependencies and virtual environments.
 
-This project is using pipenv as a packaging tool. Learn more about pipenv here (<https://realpython.com/pipenv-guide/>)::
+Installing with **Pip**:
 
-    $ pip install pipenv
+    ```shell
+    $ cd path/to/atados-project
+    $ pip install --upgrade flask flask-sqlalchemy # and any other optional packages
+    ```
+
+Installing with **Pipenv**:
+
+    ```shell
+    $ pip install --upgrade pipenv
+    $ cd path/to/atados-project
     $ pipenv sync -d
-    $ pipenv shell
+    ```
 
-It will install all requirements needed and create a virtual environment.
-
+Finally, configure the application. This will require you to define a few variables and create the database.
 
 Run
 ---
@@ -49,23 +61,29 @@ Note: The pipenv virtual environment should be done.
 
 Set the environment variables::
 
-    $ export FLASK_CONFIG=development
-    $ export FLASK_APP=run.py
+    ```shell
+    $ export FLASK_APP=src
+    $ export FLASK_ENV=development
+    ```
 
 Or on Windows cmd::
-
-    > set FLASK_CONFIG=development
-    > set FLASK_APP=run.py
-
+    ```shell
+    > set FLASK_APP=src
+    > set FLASK_ENV=development
+    ```
 Create the database::
 
+    ```shell
     $ flask db init
     $ flask db migrate
     $ flask db upgrade
+    ```
 
 Run the application::
 
+    ```shell
     $ flask run
+    ```
 
 Open http://127.0.0.1:5000 in a browser.
 
@@ -76,13 +94,26 @@ Tests
 From Postman::
 - Import the collection file: postman/
 - Import the environment file: postman/
+-
 
 From Python code tests (unit tests)::
 
+    ```shell
     $ pytest
+    ```
 
 Run with coverage report::
 
+    ```shell
     $ coverage run -m pytest
     $ coverage report
     $ coverage html  # open htmlcov/index.html in a browser
+    ```
+
+About
+======
+This project is part of the Atados challenge.
+
+Author
+======
+- [Eric Dantas](https://www.linkedin.com/in/ericrommel)
