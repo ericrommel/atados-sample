@@ -285,6 +285,69 @@
 			"response": []
 		},
 		{
+			"name": "Add a Volunteer (one more)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "885f6b25-d44b-473d-8933-ee649bd84e3c",
+						"exec": [
+							"pm.test(\"Response code is 201\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is CREATED\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'CREATED');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3584bd35-1056-4f8d-82e6-7a9c5c7d4cf7",
+						"exec": [
+							"// Email generator\r",
+							"randomail = Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);\r",
+							"\r",
+							"randomail += \"@email.com\"\r",
+							"pm.environment.set(\"volunteerEmail\", randomail);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"first_name\": \"First Name\",\r\n  \"last_name\": \"Last Name\",\r\n  \"email\": \"{{volunteerEmail}}\",\r\n  \"district\": \"District IX\",\r\n  \"city\": \"Budapest\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/volunteers/add",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"volunteers",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Add a Volunteer (same email)",
 			"event": [
 				{
@@ -304,8 +367,10 @@
 							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Response message should be '403 Forbidden: Volunteer email 75v2nnr0t9fg@email.com already exists in the database.'\", function () {\r",
-							"    pm.expect(pm.response.json().error).to.be.eq(\"403 Forbidden: Volunteer email 75v2nnr0t9fg@email.com already exists in the database.\");\r",
+							"const msg = `403 Forbidden: Volunteer email ${pm.environment.get(\"volunteerEmail\")} already exists in the database.`\r",
+							"\r",
+							"pm.test(`Response message should be '${msg}'`, function () {\r",
+							"    pm.expect(pm.response.json().error).to.be.eq(`${msg}`);\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -393,27 +458,23 @@
 			"response": []
 		},
 		{
-			"name": "List Volunteers (not logged in)",
+			"name": "List Volunteers",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "9486388b-bb39-4407-a113-d6890d10f2e6",
 						"exec": [
-							"pm.test(\"Response code is 401\", function() {\r",
-							"    pm.expect(pm.response).to.have.property('code', 401);\r",
+							"pm.test(\"Response code is 200\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Response status is UNAUTHORIZED\", function() {\r",
-							"    pm.expect(pm.response).to.have.property('status', 'UNAUTHORIZED');\r",
+							"pm.test(\"Response status is OK\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'OK');\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Response Body is not empty\", function () {\r",
 							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Response message should be '401 Unauthorized: It looks like you are not logged in yet.'\", function () {\r",
-							"    pm.expect(pm.response.json().error).to.be.eq(\"401 Unauthorized: It looks like you are not logged in yet.\");\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -871,15 +932,13 @@
 							"    pm.expect(data).to.not.be.empty;\r",
 							"});\r",
 							"\r",
-							"len = data.length\r",
-							"count = 1\r",
+							"data.length\r",
 							"for (var i of data) {\r",
-							"    if (count === len) {\r",
+							"    if (data.length > 0) {\r",
 							"        pm.environment.set('volunteerId', i.id);\r",
 							"        pm.environment.set('volunteerEmail', i.email)\r",
 							"        break\r",
 							"    }\r",
-							"    count++;\r",
 							"}"
 						],
 						"type": "text/javascript"
@@ -1161,20 +1220,16 @@
 					"script": {
 						"id": "a9bb6219-f16c-4743-9551-a80149ffceda",
 						"exec": [
-							"pm.test(\"Response code is 500\", function() {\r",
-							"    pm.expect(pm.response).to.have.property('code', 500);\r",
+							"pm.test(\"Response code is 400\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 400);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Response status is INTERNAL SERVER ERROR\", function() {\r",
-							"    pm.expect(pm.response).to.have.property('status', 'INTERNAL SERVER ERROR');\r",
+							"pm.test(\"Response status is BAD REQUEST\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'BAD REQUEST');\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Response Body is not empty\", function () {\r",
 							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Response message should be '500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.'\", function () {\r",
-							"    pm.expect(pm.response.json().error).to.be.eq(\"500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.\");\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -1437,6 +1492,68 @@
 			"response": []
 		},
 		{
+			"name": "Add an action (one more)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "22997bcb-6e09-4965-8827-f6b55258d961",
+						"exec": [
+							"pm.test(\"Response code is 201\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('code', 201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response status is CREATED\", function() {\r",
+							"    pm.expect(pm.response).to.have.property('status', 'CREATED');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is not empty\", function () {\r",
+							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1fedf25b-f2b2-4813-b64b-e64dae726017",
+						"exec": [
+							"// Reference ID generator\r",
+							"randoReference = Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);\r",
+							"\r",
+							"pm.environment.set(\"referenceId\", randoReference);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"action_name\": \"Action Name\",\r\n    \"reference_id\": \"{{referenceId}}\",\r\n    \"organizing_institution\": \"Institution\",\r\n    \"address\": \"This is an address, 88\",\r\n    \"district\": \"District IX\",\r\n    \"city\": \"Budapest\",\r\n    \"description\": \"This is a description about the action\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/actions/add",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"actions",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Add an action (same reference id)",
 			"event": [
 				{
@@ -1569,7 +1686,9 @@
 							"\r",
 							"pm.test(\"Response Body is not empty\", function () {\r",
 							"    pm.expect(pm.response.json()).to.not.be.empty;\r",
-							"});"
+							"});\r",
+							"\r",
+							"pm.environment.set(\"referenceId\", pm.response.json().reference_id)"
 						],
 						"type": "text/javascript"
 					}

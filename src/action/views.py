@@ -108,7 +108,8 @@ def edit_action(id):
     check_admin()
 
     action = Action.query.get_or_404(id)
-    LOGGER.info("Set variables from request")
+
+    LOGGER.info("Set action variables from request")
     try:
         action.reference_id = request.json["reference_id"]
         action.action_name = request.json["action_name"]
@@ -126,7 +127,7 @@ def edit_action(id):
         db.session.commit()
     except SQLAlchemyError as e:
         db.session.rollback()
-        abort(400, f"Actio reference id {action.reference_id} already exists.")
+        abort(400, f"Action reference id {action.reference_id} already exists.")
     except Exception as e:
         abort(500, e)
 

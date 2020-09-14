@@ -100,7 +100,8 @@ def edit_volunteer(id):
     check_admin()
 
     volunteer = Volunteer.query.get_or_404(id)
-    LOGGER.info("Set variables from request")
+
+    LOGGER.info("Set volunteer variables from request")
     try:
         volunteer.first_name = request.json["first_name"]
         volunteer.last_name = request.json["last_name"]
